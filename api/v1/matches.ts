@@ -1,9 +1,10 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import knex from 'knex'
 
-import config from '../../../knexfile.js'
+import config from '../../knexfile.js'
+import { allowCors } from '../../cors/corsHelper'
 
-export default async function (req: VercelRequest, res: VercelResponse): Promise<void> {
+const handler = async function (req: VercelRequest, res: VercelResponse): Promise<void> {
   const knexen = knex(config)
   const matches = (
     await knexen.raw(
@@ -22,3 +23,4 @@ export default async function (req: VercelRequest, res: VercelResponse): Promise
 
   await knexen.destroy()
 }
+export default allowCors(handler)

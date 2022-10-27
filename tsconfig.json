@@ -16,6 +16,6 @@
     "incremental": true,
     "outDir": "build"
   },
-  "include": ["src/**/*.ts"],
+  "include": ["**/*.ts"],
   "exclude": ["node_modules"]
 }

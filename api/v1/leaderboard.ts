@@ -2,11 +2,13 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import knex from 'knex'
 
-import config from '../../../knexfile.js'
+import config from '../../knexfile.js'
 import { verifiserIdToken } from '../../auth/verifiserIdToken'
 import { matchResultScores } from '../../bets/matchResultScores'
+import { allowCors } from '../../cors/corsHelper'
+import { scoreCalculator } from '../../bets/scoreCalculator'
 
-export default async function (req: VercelRequest, res: VercelResponse): Promise<void> {
+const handler = async function (req: VercelRequest, res: VercelResponse): Promise<void> {
   const authheader = req.headers.authorization
   if (!authheader) {
     res.status(401)
@@ -108,3 +110,5 @@ export default async function (req: VercelRequest, res: VercelResponse): Promise
 
   await knexen.destroy()
 }
+
+export default allowCors(handler)

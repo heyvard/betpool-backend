@@ -1,10 +1,11 @@
 import { VercelRequest, VercelResponse } from '@vercel/node'
 import knex from 'knex'
 
-import config from '../../../knexfile.js'
+import config from '../../knexfile.js'
 import { verifiserIdToken } from '../../auth/verifiserIdToken'
+import { allowCors } from '../../cors/corsHelper'
 
-export default async function handler(req: VercelRequest, res: VercelResponse): Promise<void> {
+const handler = async function handler(req: VercelRequest, res: VercelResponse): Promise<void> {
   const authheader = req.headers.authorization
   if (!authheader) {
     res.status(401)
@@ -46,8 +47,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse): 
     userBets.push({ user_id: nyBruker[0].id + '', match_id: matchIds[i].id + '' })
   }
 
-  await knex('bets').insert(userBets)
+  await knexen('bets').insert(userBets)
 
   res.status(200).json(nyBruker[0])
   knexen.destroy().then()
 }
+
+export default allowCors(handler)

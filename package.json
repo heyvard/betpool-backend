@@ -4,11 +4,9 @@
   "private": true,
   "scripts": {
     "migrate": "knex migrate:latest",
-    "migrate-and-build": "npm run migrate && npm run kopier",
     "prettier:write": "prettier --write .",
     "prettier:check": "prettier --check .",
     "lint": "eslint .",
-    "kopier": "copyfiles src/**/* public",
     "lint:fix": "eslint . --fix",
     "format": "npm run prettier:write && npm run lint:fix"
   },
@@ -21,7 +19,6 @@
     "@typescript-eslint/eslint-plugin": "^5.35.1",
     "@typescript-eslint/parser": "^5.35.1",
     "@vercel/node": "^2.5.26",
-    "copyfiles": "^2.4.1",
     "eslint": "8.26.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-import": "^2.26.0",
