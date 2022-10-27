@@ -16,6 +16,6 @@
     "incremental": true,
     "outDir": "build"
   },
-  "include": ["api/*.ts"],
+  "include": ["src/api/*.ts"],
   "exclude": ["node_modules"]
 }

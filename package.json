@@ -8,24 +8,21 @@
     "prettier:write": "prettier --write .",
     "prettier:check": "prettier --check .",
     "lint": "eslint .",
-    "kopier": "copyfiles api/**.* public",
+    "kopier": "copyfiles src/**.* public",
     "lint:fix": "eslint . --fix",
     "format": "npm run prettier:write && npm run lint:fix"
   },
   "dependencies": {
-    "jose": "^4.10.0",
+    "jose": "^4.10.3",
     "knex": "^2.3.0",
     "pg": "^8.8.0"
   },
   "devDependencies": {
-    "@types/node": "18.11.0",
-    "@types/react": "17.0.2",
-    "@types/react-dom": "17.0.2",
     "@typescript-eslint/eslint-plugin": "^5.35.1",
     "@typescript-eslint/parser": "^5.35.1",
     "@vercel/node": "^2.5.26",
     "copyfiles": "^2.4.1",
-    "eslint": "8.25.0",
+    "eslint": "8.26.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-prettier": "^4.2.1",

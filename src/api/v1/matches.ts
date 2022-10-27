@@ -1,7 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import knex from 'knex'
 
-import config from '../knexfile.js'
+import config from '../../../knexfile.js'
 
 export default async function (req: VercelRequest, res: VercelResponse): Promise<void> {
   const knexen = knex(config)
@@ -17,7 +17,8 @@ export default async function (req: VercelRequest, res: VercelResponse): Promise
           ORDER BY game_start, m.id asc;`
     )
   ).rows
-  knexen.destroy()
 
   res.json(matches)
+
+  await knexen.destroy()
 }
