@@ -6,6 +6,6 @@ const handler = async function handler(opts: ApiHandlerOpts): Promise<void> {
     const { res, req } = opts
     const { id } = req.query
 
-    res.status(200).json({ req: req.body, id })
+    res.status(200).json({ req: JSON.parse(req.body), id })
 }
 export default allowCors(auth(handler))
