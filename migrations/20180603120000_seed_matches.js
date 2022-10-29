@@ -364,5 +364,5 @@ exports.up = async (knex) => {
   await knex('matches').insert(matches)
 }
 
-exports.down = async function down(knex) {
-}
+// eslint-disable-next-line @typescript-eslint/no-empty-function
+exports.down = async function down() {}
