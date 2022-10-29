@@ -1,13 +1,12 @@
-import type { VercelRequest, VercelResponse } from '@vercel/node'
-import knex from 'knex'
-
-import config from '../../knexfile.js'
 import { allowCors } from '../../cors/corsHelper'
+import { auth } from '../../auth/authHandler'
+import { ApiHandlerOpts } from '../../types/apiHandlerOpts'
 
-const handler = async function (req: VercelRequest, res: VercelResponse): Promise<void> {
-    const knexen = knex(config)
+const handler = async function handler(opts: ApiHandlerOpts): Promise<void> {
+    const { res, knex } = opts
+
     const matches = (
-        await knexen.raw(
+        await knex.raw(
             `
           SELECT m.game_start,
                  m.away_team,
@@ -20,7 +19,5 @@ const handler = async function (req: VercelRequest, res: VercelResponse): Promis
     ).rows
 
     res.json(matches)
-
-    await knexen.destroy()
 }
-export default allowCors(handler)
+export default allowCors(auth(handler))

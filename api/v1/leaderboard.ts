@@ -1,30 +1,17 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type { VercelRequest, VercelResponse } from '@vercel/node'
-import knex from 'knex'
 
-import config from '../../knexfile.js'
-import { verifiserIdToken } from '../../auth/verifiserIdToken'
 import { matchResultScores } from '../../bets/matchResultScores'
 import { allowCors } from '../../cors/corsHelper'
 import { scoreCalculator } from '../../bets/scoreCalculator'
+import { auth } from '../../auth/authHandler'
+import { ApiHandlerOpts } from '../../types/apiHandlerOpts'
 
-const handler = async function (req: VercelRequest, res: VercelResponse): Promise<void> {
-    const authheader = req.headers.authorization
-    if (!authheader) {
-        res.status(401)
-        return
-    }
-
-    const verifisert = await verifiserIdToken(authheader.split(' ')[1])
-    if (!verifisert) {
-        res.status(401)
-        return
-    }
-    const knexen = knex(config)
+const handler = async function handler(opts: ApiHandlerOpts): Promise<void> {
+    const { res, knex } = opts
 
     async function getAllBets(): Promise<any> {
         return (
-            await knexen.raw(`
+            await knex.raw(`
           SELECT u.id         userid,
                  u.name,
                  u.picture,
@@ -48,7 +35,7 @@ const handler = async function (req: VercelRequest, res: VercelResponse): Promis
 
     async function getEmptyBoard(): Promise<any> {
         return (
-            await knexen.raw(`
+            await knex.raw(`
           SELECT u.id userid, u.name, u.picture, 0.0 score
           FROM users u`)
         ).rows
@@ -58,7 +45,6 @@ const handler = async function (req: VercelRequest, res: VercelResponse): Promis
     if (allBets.length === 0) {
         const emptyBoard = await getEmptyBoard()
         res.status(200).json(emptyBoard)
-        knexen.destroy().then()
         return
     }
 
@@ -107,8 +93,6 @@ const handler = async function (req: VercelRequest, res: VercelResponse): Promis
     personsFlat.sort(compare)
 
     res.json(personsFlat)
-
-    await knexen.destroy()
 }
 
-export default allowCors(handler)
+export default allowCors(auth(handler))

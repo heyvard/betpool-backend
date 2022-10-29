@@ -1,27 +1,12 @@
-import { VercelRequest, VercelResponse } from '@vercel/node'
-import knex from 'knex'
-
-import config from '../../../knexfile.js'
-import { verifiserIdToken } from '../../../auth/verifiserIdToken'
 import { allowCors } from '../../../cors/corsHelper'
+import { auth } from '../../../auth/authHandler'
+import { ApiHandlerOpts } from '../../../types/apiHandlerOpts'
 
-const handler = async function handler(req: VercelRequest, res: VercelResponse): Promise<void> {
-    const authheader = req.headers.authorization
-    if (!authheader) {
-        res.status(401)
-        return
-    }
+const handler = async function handler(opts: ApiHandlerOpts): Promise<void> {
+    const { user, res, knex } = opts
 
-    const verifisert = await verifiserIdToken(authheader.split(' ')[1])
-    if (!verifisert) {
-        res.status(401)
-        return
-    }
-    const knexen = knex(config)
-
-    const userid = verifisert.payload.sub
     const upcoming = (
-        await knexen.raw(
+        await knex.raw(
             `
           SELECT m.game_start,
                  m.away_team,
@@ -32,17 +17,13 @@ const handler = async function handler(req: VercelRequest, res: VercelResponse):
                  b.id bet_id,
                  m.channel
           FROM bets b,
-               matches m,
-               users u
-          WHERE b.user_id = u.id
-            and u.firebase_user_id = ?
+               matches m
+          WHERE b.user_id = ?
             AND b.match_id = m.id
           ORDER BY game_start, m.id asc;`,
-            [userid],
+            [user?.id],
         )
     ).rows
     res.status(200).json(upcoming)
-
-    knexen.destroy().then()
 }
-export default allowCors(handler)
+export default allowCors(auth(handler))
