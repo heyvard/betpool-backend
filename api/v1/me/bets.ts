@@ -6,23 +6,23 @@ import { verifiserIdToken } from '../../../auth/verifiserIdToken'
 import { allowCors } from '../../../cors/corsHelper'
 
 const handler = async function handler(req: VercelRequest, res: VercelResponse): Promise<void> {
-  const authheader = req.headers.authorization
-  if (!authheader) {
-    res.status(401)
-    return
-  }
+    const authheader = req.headers.authorization
+    if (!authheader) {
+        res.status(401)
+        return
+    }
 
-  const verifisert = await verifiserIdToken(authheader.split(' ')[1])
-  if (!verifisert) {
-    res.status(401)
-    return
-  }
-  const knexen = knex(config)
+    const verifisert = await verifiserIdToken(authheader.split(' ')[1])
+    if (!verifisert) {
+        res.status(401)
+        return
+    }
+    const knexen = knex(config)
 
-  const userid = verifisert.payload.sub
-  const upcoming = (
-    await knexen.raw(
-      `
+    const userid = verifisert.payload.sub
+    const upcoming = (
+        await knexen.raw(
+            `
           SELECT m.game_start,
                  m.away_team,
                  m.home_team,
@@ -38,11 +38,11 @@ const handler = async function handler(req: VercelRequest, res: VercelResponse):
             and u.firebase_user_id = ?
             AND b.match_id = m.id
           ORDER BY game_start, m.id asc;`,
-      [userid]
-    )
-  ).rows
-  res.status(200).json(upcoming)
+            [userid],
+        )
+    ).rows
+    res.status(200).json(upcoming)
 
-  knexen.destroy().then()
+    knexen.destroy().then()
 }
 export default allowCors(handler)

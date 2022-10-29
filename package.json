@@ -1,55 +1,55 @@
 {
-  "name": "betpool-2022-backend",
-  "version": "0.1.0",
-  "private": true,
-  "scripts": {
-    "migrate": "knex migrate:latest",
-    "reset-db": "knex migrate:rollback --all",
-    "prettier:write": "prettier --write .",
-    "prettier:check": "prettier --check .",
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
-    "format": "npm run prettier:write && npm run lint:fix"
-  },
-  "dependencies": {
-    "jose": "^4.10.3",
-    "knex": "^2.3.0",
-    "pg": "^8.8.0"
-  },
-  "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^5.35.1",
-    "@typescript-eslint/parser": "^5.35.1",
-    "@vercel/node": "^2.5.26",
-    "eslint": "8.26.0",
-    "eslint-config-prettier": "^8.5.0",
-    "eslint-plugin-import": "^2.26.0",
-    "eslint-plugin-prettier": "^4.2.1",
-    "prettier": "^2.7.1",
-    "typescript": "4.8.4"
-  },
-  "eslintConfig": {
-    "extends": [
-      "plugin:@typescript-eslint/recommended",
-      "prettier"
-    ],
-    "plugins": [
-      "prettier",
-      "import"
-    ],
-    "rules": {
-      "prettier/prettier": "warn",
-      "import/order": [
-        "warn",
-        {
-          "newlines-between": "always"
+    "name": "betpool-2022-backend",
+    "version": "0.1.0",
+    "private": true,
+    "scripts": {
+        "migrate": "knex migrate:latest",
+        "reset-db": "knex migrate:rollback --all",
+        "prettier:write": "prettier --write .",
+        "prettier:check": "prettier --check .",
+        "lint": "eslint .",
+        "lint:fix": "eslint . --fix",
+        "format": "npm run prettier:write && npm run lint:fix"
+    },
+    "dependencies": {
+        "jose": "^4.10.3",
+        "knex": "^2.3.0",
+        "pg": "^8.8.0"
+    },
+    "devDependencies": {
+        "@typescript-eslint/eslint-plugin": "^5.35.1",
+        "@typescript-eslint/parser": "^5.35.1",
+        "@vercel/node": "^2.5.26",
+        "eslint": "8.26.0",
+        "eslint-config-prettier": "^8.5.0",
+        "eslint-plugin-import": "^2.26.0",
+        "eslint-plugin-prettier": "^4.2.1",
+        "prettier": "^2.7.1",
+        "typescript": "4.8.4"
+    },
+    "eslintConfig": {
+        "extends": [
+            "plugin:@typescript-eslint/recommended",
+            "prettier"
+        ],
+        "plugins": [
+            "prettier",
+            "import"
+        ],
+        "rules": {
+            "prettier/prettier": "warn",
+            "import/order": [
+                "warn",
+                {
+                    "newlines-between": "always"
+                }
+            ],
+            "@typescript-eslint/explicit-function-return-type": [
+                "error",
+                {
+                    "allowExpressions": true
+                }
+            ]
         }
-      ],
-      "@typescript-eslint/explicit-function-return-type": [
-        "error",
-        {
-          "allowExpressions": true
-        }
-      ]
     }
-  }
 }
