@@ -14,6 +14,6 @@ exports.up = async (knex) => {
   })
 }
 
-exports.down = function down() {
-  throw new Error('Rollback unsupported')
+exports.down = async function down(knex) {
+  await knex.schema.dropTable('matches')
 }

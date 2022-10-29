@@ -364,6 +364,5 @@ exports.up = async (knex) => {
   await knex('matches').insert(matches)
 }
 
-exports.down = function down() {
-  throw new Error('Rollback unsupported')
+exports.down = async function down(knex) {
 }
