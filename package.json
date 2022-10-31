@@ -12,7 +12,7 @@
         "format": "npm run prettier:write && npm run lint:fix"
     },
     "dependencies": {
-        "jose": "^4.10.3",
+        "jose": "^4.10.4",
         "knex": "^2.3.0",
         "pg": "^8.8.0"
     },
