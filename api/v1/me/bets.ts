@@ -14,8 +14,7 @@ const handler = async function handler(opts: ApiHandlerOpts): Promise<void> {
                  b.home_score,
                  b.away_score,
                  b.match_id,
-                 b.id bet_id,
-                 m.channel
+                 b.id bet_id
           FROM bets b,
                matches m
           WHERE b.user_id = ?

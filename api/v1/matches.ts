@@ -10,8 +10,7 @@ const handler = async function handler(opts: ApiHandlerOpts): Promise<void> {
             `
           SELECT m.game_start,
                  m.away_team,
-                 m.home_team,
-                 m.channel
+                 m.home_team
           FROM bets b,
                matches m
           ORDER BY game_start, m.id asc;`,
