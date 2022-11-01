@@ -21,7 +21,7 @@ const handler = async function handler(opts: ApiHandlerOpts): Promise<void> {
                  m.home_team,
                  b.home_score,
                  b.away_score,
-                 m.type,
+                 m.round,
                  m.home_score home_result,
                  m.away_score away_result
           FROM bets b,

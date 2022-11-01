@@ -11,19 +11,19 @@ function canCalculate(bet: any) {
 
 function getMatchValue(type: any) {
     switch (type) {
-        case 'ROUND1':
+        case 1:
             return 1.0
-        case 'ROUND2':
+        case 2:
             return 1.0
-        case 'ROUND3':
+        case 3:
             return 1.0
-        case '8':
+        case 4:
             return 2.0
-        case 'QUARTER':
+        case 5:
             return 2.0
-        case 'SEMI':
+        case 6:
             return 2.0
-        case 'FINAL':
+        case 7:
             return 3.0
         default:
             throw new Error('Illegal match type')
@@ -36,7 +36,7 @@ export function scoreCalculator(bets: any, matchScoreMap: any) {
             if (bet.home_score === bet.home_result && bet.away_score === bet.away_result) {
                 console.log('Riktig resultat matchScoreMap[bet.match_id] ' + bet.match_id)
                 console.log(matchScoreMap[bet.match_id])
-                bet.score = getMatchValue(bet.type) + matchScoreMap[bet.match_id]
+                bet.score = getMatchValue(bet.round) + matchScoreMap[bet.match_id]
             } else {
                 let hubResult = 'U'
                 if (bet.home_result > bet.away_result) {
@@ -54,7 +54,7 @@ export function scoreCalculator(bets: any, matchScoreMap: any) {
                     hubBet = 'B'
                 }
                 if (hubBet === hubResult) {
-                    bet.score = getMatchValue(bet.type)
+                    bet.score = getMatchValue(bet.round)
                 } else {
                     bet.score = 0.0
                 }
