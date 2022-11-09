@@ -3,8 +3,22 @@ import { auth } from '../../auth/authHandler'
 import { ApiHandlerOpts } from '../../types/apiHandlerOpts'
 
 const handler = async function handler(opts: ApiHandlerOpts): Promise<void> {
-    const { user, res, knex, jwtPayload } = opts
-    if (opts.user) {
+    const { user, res, knex, jwtPayload, req } = opts
+    if (user) {
+        if (req.method == 'PUT') {
+            const reqBody = JSON.parse(req.body)
+            const charity = reqBody.charity
+            if (!(charity >= 10 && charity <= 75)) {
+                res.status(400)
+                return
+            }
+            const oppdatert = await knex('users').where('id', '=', user.id).update({
+                charity: charity,
+            })
+            res.status(200).json(oppdatert)
+            return
+        }
+
         res.status(200).json(user)
         return
     }
