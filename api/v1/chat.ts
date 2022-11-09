@@ -17,6 +17,7 @@ const handler = async function handler(opts: ApiHandlerOpts): Promise<void> {
         }
         await knex('chat').insert(data)
         res.status(201).json(data)
+        return
     }
 
     const chat = (
