@@ -1,8 +1,6 @@
 'use strict'
 
 exports.up = async (knex) => {
-    await knex.raw('CREATE EXTENSION IF NOT EXISTS "uuid-ossp";')
-
     await knex.schema.createTable('users', (t) => {
         t.uuid('id').default(knex.raw('uuid_generate_v4()')).primary()
         t.string('firebase_user_id').unique().notNullable()

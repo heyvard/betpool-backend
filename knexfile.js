@@ -1,5 +1,5 @@
 module.exports = {
-    client: 'pg',
+    client: 'cockroachdb',
     connection: process.env.PG_URI,
     migrations: {
         directory: './migrations',
