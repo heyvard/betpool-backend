@@ -9,6 +9,7 @@ import { verifiserIdToken } from './verifiserIdToken'
 
 export function auth(fn: { (opts: ApiHandlerOpts): Promise<void> }) {
     return async (req: VercelRequest, res: VercelResponse) => {
+        const start = Date.now()
         const authheader = req.headers.authorization
         if (!authheader) {
             res.status(401)
@@ -20,15 +21,25 @@ export function auth(fn: { (opts: ApiHandlerOpts): Promise<void> }) {
             res.status(401)
             return
         }
+        const verifsert = Date.now()
+
         const knexen = knex(config)
+        const dbkobling = Date.now()
 
         const user = (await knexen
             .select('*')
             .from('users')
             .where('firebase_user_id', verifisert.payload.sub)
             .first()) as User | undefined
+        const etterUser = Date.now()
 
         await fn({ req, res, jwtPayload: verifisert.payload, knex: knexen, user })
+        const etterKoden = Date.now()
+        console.log(
+            `${req.url} Verifisering: ${verifsert - start}  - Db: ${dbkobling - verifsert}  - user: ${
+                etterUser - dbkobling
+            }  - kode: ${etterKoden - etterUser}  - `,
+        )
         knexen.destroy().then()
     }
 }
