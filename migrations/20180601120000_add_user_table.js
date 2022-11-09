@@ -11,6 +11,8 @@ exports.up = async (knex) => {
         t.string('email').unique().notNullable()
         t.string('name').notNullable()
         t.boolean('admin').notNullable()
+        t.boolean('paid').notNullable()
+        t.smallint('charity').notNullable()
         t.timestamps(false, true)
     })
 }

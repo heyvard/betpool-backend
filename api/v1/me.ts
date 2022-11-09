@@ -17,6 +17,8 @@ const handler = async function handler(opts: ApiHandlerOpts): Promise<void> {
             firebase_user_id: jwtPayload.sub,
             admin: false,
             active: true,
+            charity: 50,
+            paid: false,
         })
         .into('users')
         .returning('*')
