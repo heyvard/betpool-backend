@@ -33,7 +33,7 @@ const handler = async function handler(opts: ApiHandlerOptsPg): Promise<void> {
         `
         INSERT INTO users (firebase_user_id, picture, active, email, name, admin, paid, charity)
         VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *`,
-        [jwtPayload.sub, jwtPayload.picture, true, jwtPayload.email, false, true, 50],
+        [jwtPayload.sub, jwtPayload.picture, true, jwtPayload.email, jwtPayload.name, false, true, 50],
     )
 
     const matchIds = (await client.query(' select id from matches')).rows
@@ -42,7 +42,7 @@ const handler = async function handler(opts: ApiHandlerOptsPg): Promise<void> {
         await client.query(
             `
           INSERT INTO bets (user_id, match_id)
-          VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *`,
+          VALUES ($1, $2) RETURNING *`,
             [nyBruker.rows[0].id, matchIds[i].id],
         )
     }
