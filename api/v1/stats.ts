@@ -1,18 +1,16 @@
 import { allowCors } from '../../cors/corsHelper'
-import { auth } from '../../auth/authHandler'
-import { ApiHandlerOpts } from '../../types/apiHandlerOpts'
+import { auth } from '../../auth/authHandlerPg'
+import { ApiHandlerOptsPg } from '../../types/apiHandlerOptsv2'
 
-const handler = async function handler(opts: ApiHandlerOpts): Promise<void> {
-    const { res, knex } = opts
+const handler = async function handler(opts: ApiHandlerOptsPg): Promise<void> {
+    const { user, res, client } = opts
 
-    const charity = (
-        await knex.raw(
-            `
-          SELECT u.charity
-          FROM users u;`,
-        )
-    ).rows
+    if (!user) {
+        res.status(401)
+        return
+    }
 
+    const charity = (await client.query('SELECT charity from users')).rows
     res.json(charity)
 }
 export default allowCors(auth(handler))
