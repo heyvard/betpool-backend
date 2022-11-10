@@ -1,9 +1,9 @@
 import { allowCors } from '../../cors/corsHelper'
-import { auth } from '../../auth/authHandler'
-import { ApiHandlerOpts } from '../../types/apiHandlerOpts'
+import { auth } from '../../auth/authHandlerPg'
+import { ApiHandlerOptsPg } from '../../types/apiHandlerOptsv2'
 
-const handler = async function handler(opts: ApiHandlerOpts): Promise<void> {
-    const { user, res, knex, jwtPayload, req } = opts
+const handler = async function handler(opts: ApiHandlerOptsPg): Promise<void> {
+    const { res, req, user, jwtPayload, client } = opts
     if (user) {
         if (req.method == 'PUT') {
             const reqBody = JSON.parse(req.body)
@@ -12,10 +12,16 @@ const handler = async function handler(opts: ApiHandlerOpts): Promise<void> {
                 res.status(400)
                 return
             }
-            const oppdatert = await knex('users').where('id', '=', user.id).update({
-                charity: charity,
-            })
-            res.status(200).json(oppdatert)
+
+            await client.query(
+                `
+            UPDATE users
+            SET charity = $1
+            WHERE id = $2;
+        `,
+                [charity, user.id],
+            )
+            res.status(200).json({ ok: 123 })
             return
         }
 
@@ -23,31 +29,25 @@ const handler = async function handler(opts: ApiHandlerOpts): Promise<void> {
         return
     }
 
-    const nyBruker = await knex
-        .insert({
-            name: jwtPayload.name,
-            email: jwtPayload.email,
-            picture: jwtPayload.picture,
-            firebase_user_id: jwtPayload.sub,
-            admin: false,
-            active: true,
-            charity: 50,
-            paid: false,
-        })
-        .into('users')
-        .returning('*')
+    const nyBruker = await client.query(
+        `
+        INSERT INTO users (firebase_user_id, picture, active, email, name, admin, paid, charity)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *`,
+        [jwtPayload.sub, jwtPayload.picture, true, jwtPayload.email, false, true, 50],
+    )
 
-    const matchIds = await knex.select('id').from('matches')
-
-    const userBets = []
+    const matchIds = (await client.query(' select id from matches')).rows
 
     for (let i = 0; i < matchIds.length; i++) {
-        userBets.push({ user_id: nyBruker[0].id + '', match_id: matchIds[i].id + '' })
+        await client.query(
+            `
+          INSERT INTO bets (user_id, match_id)
+          VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *`,
+            [nyBruker.rows[0].id, matchIds[i].id],
+        )
     }
 
-    await knex('bets').insert(userBets)
-
-    res.status(200).json(nyBruker[0])
+    res.status(200).json(nyBruker.rows[0])
 }
 
 export default allowCors(auth(handler))
