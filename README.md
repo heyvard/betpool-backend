@@ -1,4 +1,3 @@
 # betpool-2022-backend
 
-api og db
-
+api og db for betpool
