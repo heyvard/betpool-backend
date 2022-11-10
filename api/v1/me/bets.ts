@@ -22,7 +22,7 @@ const handler = async function handler(opts: ApiHandlerOptsPg): Promise<void> {
                  b.id bet_id
           FROM bets b,
                matches m
-          WHERE b.user_id = ?
+          WHERE b.user_id = $1
             AND b.match_id = m.id
           ORDER BY game_start, m.id asc;`,
             [user?.id],
