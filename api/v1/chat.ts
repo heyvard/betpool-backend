@@ -1,8 +1,8 @@
 import { allowCors } from '../../cors/corsHelper'
-import { auth } from '../../auth/authHandlerPg'
-import { ApiHandlerOptsPg } from '../../types/apiHandlerOptsv2'
+import { auth } from '../../auth/authHandler'
+import { ApiHandlerOpts } from '../../types/apiHandlerOpts'
 
-const handler = async function handler(opts: ApiHandlerOptsPg): Promise<void> {
+const handler = async function handler(opts: ApiHandlerOpts): Promise<void> {
     const { res, req, user, client } = opts
     if (!user) {
         res.status(401)

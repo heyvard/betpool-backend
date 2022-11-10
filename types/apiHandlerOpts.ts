@@ -1,6 +1,6 @@
 import { VercelRequest, VercelResponse } from '@vercel/node'
 import { JWTPayload } from 'jose'
-import { Knex } from 'knex'
+import { PoolClient } from 'pg'
 
 import { User } from './db'
 
@@ -8,6 +8,6 @@ export interface ApiHandlerOpts {
     req: VercelRequest
     res: VercelResponse
     jwtPayload: JWTPayload
-    knex: Knex
+    client: PoolClient
     user?: User
 }

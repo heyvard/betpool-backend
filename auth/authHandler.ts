@@ -1,23 +1,23 @@
 import { VercelRequest, VercelResponse } from '@vercel/node'
-import knex from 'knex'
+import { Pool, PoolClient } from 'pg'
 
-import { ApiHandlerOpts } from '../types/apiHandlerOpts'
-import config from '../knexfile'
 import { User } from '../types/db'
+import { ApiHandlerOpts } from '../types/apiHandlerOpts'
 
 import { verifiserIdToken } from './verifiserIdToken'
 
-let globalvar: null | number
+let pool: null | Pool
 
 export function auth(fn: { (opts: ApiHandlerOpts): Promise<void> }) {
     return async (req: VercelRequest, res: VercelResponse) => {
-        if (globalvar == null) {
-            console.log('global var er null')
-            globalvar = Date.now()
-            console.log('global var satt til ' + globalvar)
-        } else {
-            console.log('global var er ' + globalvar)
+        if (!pool) {
+            const connectionString = process.env.PG_URI
+            pool = new Pool({
+                connectionString,
+                max: 1,
+            })
         }
+
         const start = Date.now()
         const authheader = req.headers.authorization
         if (!authheader) {
@@ -31,24 +31,34 @@ export function auth(fn: { (opts: ApiHandlerOpts): Promise<void> }) {
             return
         }
         const verifsert = Date.now()
+        let client: PoolClient | null = null
+        try {
+            client = await pool.connect()
 
-        const knexen = knex(config)
-        const dbkobling = Date.now()
+            const dbkobling = Date.now()
 
-        const user = (await knexen
-            .select('*')
-            .from('users')
-            .where('firebase_user_id', verifisert.payload.sub)
-            .first()) as User | undefined
-        const etterUser = Date.now()
+            const userList = await client.query('SELECT * from users where firebase_user_id = $1', [
+                verifisert.payload.sub,
+            ])
 
-        await fn({ req, res, jwtPayload: verifisert.payload, knex: knexen, user })
-        const etterKoden = Date.now()
-        console.log(
-            `${req.url} Verifisering: ${verifsert - start}  - Db: ${dbkobling - verifsert}  - user: ${
-                etterUser - dbkobling
-            }  - kode: ${etterKoden - etterUser}  - `,
-        )
-        knexen.destroy().then()
+            function hentBrukeren(): User | undefined {
+                if (userList.rows.length == null) {
+                    return undefined
+                }
+                return userList.rows[0]
+            }
+
+            const etterUser = Date.now()
+
+            await fn({ req, res, jwtPayload: verifisert.payload, client, user: hentBrukeren() })
+            const etterKoden = Date.now()
+            console.log(
+                `${req.url} Verifisering pg handler: ${verifsert - start}  - Db: ${dbkobling - verifsert}  - user: ${
+                    etterUser - dbkobling
+                }  - kode: ${etterKoden - etterUser}  - `,
+            )
+        } finally {
+            client?.release()
+        }
     }
 }
