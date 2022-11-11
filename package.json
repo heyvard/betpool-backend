@@ -4,7 +4,6 @@
     "private": true,
     "scripts": {
         "migrate": "knex migrate:latest",
-        "reset-db": "knex migrate:rollback --all",
         "prettier:write": "prettier --write .",
         "prettier:check": "prettier --check .",
         "lint": "eslint .",
