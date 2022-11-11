@@ -11,6 +11,8 @@ exports.up = async (knex) => {
         t.boolean('admin').notNullable()
         t.boolean('paid').notNullable()
         t.smallint('charity').notNullable()
+        t.string('winner').notNullable()
+        t.string('topscorer').nullable()
         t.timestamps(false, true)
     })
 }

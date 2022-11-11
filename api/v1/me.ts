@@ -7,20 +7,32 @@ const handler = async function handler(opts: ApiHandlerOpts): Promise<void> {
     if (user) {
         if (req.method == 'PUT') {
             const reqBody = JSON.parse(req.body)
-            const charity = reqBody.charity
-            if (!(charity >= 10 && charity <= 75)) {
-                res.status(400)
-                return
-            }
+            if (reqBody.charity) {
+                const charity = reqBody.charity
+                if (!(charity >= 10 && charity <= 75)) {
+                    res.status(400)
+                    return
+                }
 
-            await client.query(
-                `
-            UPDATE users
-            SET charity = $1
-            WHERE id = $2;
-        `,
-                [charity, user.id],
-            )
+                await client.query(
+                    `
+              UPDATE users
+              SET charity = $1
+              WHERE id = $2;
+          `,
+                    [charity, user.id],
+                )
+            }
+            if (reqBody.winner) {
+                await client.query(
+                    `
+              UPDATE users
+              SET winner = $1
+              WHERE id = $2;
+          `,
+                    [reqBody.winner, user.id],
+                )
+            }
             res.status(200).json({ ok: 123 })
             return
         }
@@ -31,9 +43,9 @@ const handler = async function handler(opts: ApiHandlerOpts): Promise<void> {
 
     const nyBruker = await client.query(
         `
-        INSERT INTO users (firebase_user_id, picture, active, email, name, admin, paid, charity)
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *`,
-        [jwtPayload.sub, jwtPayload.picture, true, jwtPayload.email, jwtPayload.name, false, true, 50],
+        INSERT INTO users (firebase_user_id, picture, active, email, name, admin, paid, charity, winner)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *`,
+        [jwtPayload.sub, jwtPayload.picture, true, jwtPayload.email, jwtPayload.name, false, true, 50, 'USA'],
     )
 
     const matchIds = (await client.query(' select id from matches')).rows
