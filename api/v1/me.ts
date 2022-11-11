@@ -33,6 +33,16 @@ const handler = async function handler(opts: ApiHandlerOpts): Promise<void> {
                     [reqBody.winner, user.id],
                 )
             }
+            if (reqBody.topscorer) {
+                await client.query(
+                    `
+              UPDATE users
+              SET topscorer = $1
+              WHERE id = $2;
+          `,
+                    [reqBody.topscorer, user.id],
+                )
+            }
             res.status(200).json({ ok: 123 })
             return
         }
