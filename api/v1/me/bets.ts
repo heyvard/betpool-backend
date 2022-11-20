@@ -21,9 +21,12 @@ const handler = async function handler(opts: ApiHandlerOpts): Promise<void> {
                  b.match_id,
                  b.id bet_id
           FROM bets b,
-               matches m
+               matches m,
+               users u
           WHERE b.user_id = $1
             AND b.match_id = m.id
+            AND u.id = b.user_id
+            AND u.active is true
           ORDER BY game_start, m.id asc;`,
             [user?.id],
         )
