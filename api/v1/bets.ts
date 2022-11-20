@@ -45,7 +45,8 @@ const handler = async function handler(opts: ApiHandlerOpts): Promise<void> {
         return (
             await client.query(`
           SELECT u.id, u.name, u.picture
-          FROM users u`)
+          FROM users u
+          WHERE u.active is true`)
         ).rows
     }
 
