@@ -29,9 +29,12 @@ const handler = async function handler(opts: ApiHandlerOpts): Promise<void> {
                  m.home_score home_result,
                  m.away_score away_result
           FROM bets b,
-               matches m
+               matches m,
+               users u
           WHERE b.match_id = m.id
-            AND game_start < now();`)
+            AND game_start < now()
+            AND u.id = b.user_id
+            AND u.active is true;`)
         ).rows
     }
 
