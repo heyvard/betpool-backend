@@ -1,3 +1,5 @@
+import dayjs from 'dayjs'
+
 import { allowCors } from '../../cors/corsHelper'
 import { auth } from '../../auth/authHandler'
 import { ApiHandlerOpts } from '../../types/apiHandlerOpts'
@@ -23,7 +25,8 @@ const handler = async function handler(opts: ApiHandlerOpts): Promise<void> {
                     [charity, user.id],
                 )
             }
-            if (reqBody.winner) {
+            const kanBette = dayjs('2022-11-25T10:00:00.000Z').isAfter(dayjs())
+            if (reqBody.winner && kanBette) {
                 await client.query(
                     `
               UPDATE users
@@ -33,7 +36,7 @@ const handler = async function handler(opts: ApiHandlerOpts): Promise<void> {
                     [reqBody.winner, user.id],
                 )
             }
-            if (reqBody.topscorer) {
+            if (reqBody.topscorer && kanBette) {
                 await client.query(
                     `
               UPDATE users
