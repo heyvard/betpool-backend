@@ -16,6 +16,7 @@ const handler = async function handler(opts: ApiHandlerOpts): Promise<void> {
           SELECT m.game_start,
                  m.away_team,
                  m.home_team,
+                 m.round,
                  b.home_score,
                  b.away_score,
                  b.match_id,
