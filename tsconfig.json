@@ -1,8 +1,8 @@
 {
-  "compilerOptions": {
-    "skipLibCheck": true,
-    "esModuleInterop": true,
-    "moduleResolution": "node",
-    "target": "es2022"
-  }
+    "compilerOptions": {
+        "skipLibCheck": true,
+        "esModuleInterop": true,
+        "moduleResolution": "node",
+        "target": "es2022"
+    }
 }

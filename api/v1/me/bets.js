@@ -1,12 +1,14 @@
-import { allowCors } from '../../../cors/corsHelper';
-import { auth } from '../../../auth/authHandler';
+import { allowCors } from '../../../cors/corsHelper'
+import { auth } from '../../../auth/authHandler'
 const handler = async function handler(opts) {
-    const { user, res, client } = opts;
+    const { user, res, client } = opts
     if (!user) {
-        res.status(401);
-        return;
+        res.status(401)
+        return
     }
-    const upcoming = (await client.query(`
+    const upcoming = (
+        await client.query(
+            `
           SELECT m.game_start,
                  m.away_team,
                  m.home_team,
@@ -22,7 +24,10 @@ const handler = async function handler(opts) {
             AND b.match_id = m.id
             AND u.id = b.user_id
             AND u.active is true
-          ORDER BY game_start, m.id asc;`, [user?.id])).rows;
-    res.status(200).json(upcoming);
-};
-export default allowCors(auth(handler));
+          ORDER BY game_start, m.id asc;`,
+            [user?.id],
+        )
+    ).rows
+    res.status(200).json(upcoming)
+}
+export default allowCors(auth(handler))
