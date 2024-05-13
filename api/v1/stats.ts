@@ -10,7 +10,7 @@ const handler = async function handler(opts: ApiHandlerOpts): Promise<void> {
         return
     }
 
-    const charity = (await client.query('SELECT charity from users where active is true')).rows
-    res.json(charity)
+    const ids = (await client.query('SELECT id from users where active is true')).rows
+    res.json(ids)
 }
 export default allowCors(auth(handler))

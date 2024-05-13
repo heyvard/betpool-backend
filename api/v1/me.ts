@@ -9,22 +9,7 @@ const handler = async function handler(opts: ApiHandlerOpts): Promise<void> {
     if (user) {
         if (req.method == 'PUT') {
             const reqBody = JSON.parse(req.body)
-            if (reqBody.charity) {
-                const charity = reqBody.charity
-                if (!(charity >= 10 && charity <= 75)) {
-                    res.status(400)
-                    return
-                }
 
-                await client.query(
-                    `
-              UPDATE users
-              SET charity = $1
-              WHERE id = $2;
-          `,
-                    [charity, user.id],
-                )
-            }
             const kanBette = dayjs('2022-11-25T10:00:00.000Z').isAfter(dayjs())
             if (reqBody.winner && kanBette) {
                 await client.query(
@@ -56,7 +41,7 @@ const handler = async function handler(opts: ApiHandlerOpts): Promise<void> {
 
     const nyBruker = await client.query(
         `
-        INSERT INTO users (firebase_user_id, picture, active, email, name, admin, paid, charity, winner)
+        INSERT INTO users (firebase_user_id, picture, active, email, name, admin, paid, winner)
         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *`,
         [
             jwtPayload.sub,
@@ -66,7 +51,6 @@ const handler = async function handler(opts: ApiHandlerOpts): Promise<void> {
             jwtPayload.name || jwtPayload.email,
             false,
             true,
-            10,
             'USA',
         ],
     )
