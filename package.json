@@ -2,6 +2,7 @@
     "name": "betpool-2022-backend",
     "version": "0.1.0",
     "private": true,
+    "type": "module",
     "scripts": {
         "migrate": "knex migrate:latest",
         "prettier:write": "prettier --write .",
