@@ -49,7 +49,7 @@ const handler = async function handler(opts: ApiHandlerOpts): Promise<void> {
             jwtPayload.email,
             jwtPayload.name || jwtPayload.email,
             false,
-            true,
+            false,
             'Ukraine',
         ],
     )
