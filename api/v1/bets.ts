@@ -1,8 +1,7 @@
-import dayjs from 'dayjs'
-
 import { allowCors } from '../../cors/corsHelper'
 import { ApiHandlerOpts } from '../../types/apiHandlerOpts'
 import { auth } from '../../auth/authHandler'
+import { isInFirstRound } from '../../util/isInFirstRound'
 
 const handler = async function handler(opts: ApiHandlerOpts): Promise<void> {
     const { res, user, client } = opts
@@ -59,7 +58,7 @@ const handler = async function handler(opts: ApiHandlerOpts): Promise<void> {
 
     const alt = await Promise.all([getBets(), getUsers()])
 
-    if (dayjs('2022-11-25T10:00:00.000Z').isAfter(dayjs())) {
+    if (isInFirstRound()) {
         alt[1].forEach((a) => {
             delete a.winner
             delete a.topscorer

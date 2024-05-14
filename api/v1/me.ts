@@ -1,8 +1,7 @@
-import dayjs from 'dayjs'
-
 import { allowCors } from '../../cors/corsHelper'
 import { auth } from '../../auth/authHandler'
 import { ApiHandlerOpts } from '../../types/apiHandlerOpts'
+import { isInFirstRound } from '../../util/isInFirstRound'
 
 const handler = async function handler(opts: ApiHandlerOpts): Promise<void> {
     const { res, req, user, jwtPayload, client } = opts
@@ -10,7 +9,7 @@ const handler = async function handler(opts: ApiHandlerOpts): Promise<void> {
         if (req.method == 'PUT') {
             const reqBody = JSON.parse(req.body)
 
-            const kanBette = dayjs('2022-11-25T10:00:00.000Z').isAfter(dayjs())
+            const kanBette = isInFirstRound()
             if (reqBody.winner && kanBette) {
                 await client.query(
                     `
