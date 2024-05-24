@@ -42,6 +42,7 @@ const handler = async function handler(opts: ApiHandlerOpts): Promise<void> {
     interface User {
         id: string
         name: string
+        paid: boolean
         picture: string
         winner?: string
         topscorer?: string
@@ -50,7 +51,7 @@ const handler = async function handler(opts: ApiHandlerOpts): Promise<void> {
     async function getUsers(): Promise<User[]> {
         return (
             await client.query(`
-          SELECT u.id, u.name, u.picture, u.winner, u.topscorer
+          SELECT u.id, u.name, u.paid, u.picture, u.winner, u.topscorer
           FROM users u
           WHERE u.active is true`)
         ).rows
