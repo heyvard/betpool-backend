@@ -20,7 +20,7 @@ const handler = async function handler(opts: ApiHandlerOpts): Promise<void> {
             `
                 SELECT u.id,
                        u.email,
-                       u.display_name,
+                       u.name,
                        u.paid,
                        u.admin,
                        u.active
