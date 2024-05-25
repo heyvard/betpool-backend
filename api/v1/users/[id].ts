@@ -19,7 +19,6 @@ const handler = async function handler(opts: ApiHandlerOpts): Promise<void> {
 
     const reqBody = JSON.parse(req.body)
 
-    console.log('request: ' + JSON.stringify(reqBody))
     if (typeof reqBody.paid !== 'undefined') {
         await client.query(
             `
@@ -43,7 +42,6 @@ const handler = async function handler(opts: ApiHandlerOpts): Promise<void> {
     }
 
     if (typeof reqBody.active !== 'undefined') {
-        console.log('active er ikke undefined')
         await client.query(
             `
                 UPDATE users
@@ -52,8 +50,6 @@ const handler = async function handler(opts: ApiHandlerOpts): Promise<void> {
             `,
             [reqBody.active, id],
         )
-    } else {
-        console.log('active er undefined')
     }
 
     res.status(200).json(reqBody)
