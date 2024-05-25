@@ -30,6 +30,27 @@ const handler = async function handler(opts: ApiHandlerOpts): Promise<void> {
         )
     }
 
+    if (typeof reqBody.admin !== 'undefined') {
+        await client.query(
+            `
+                UPDATE users
+                SET admin = $1
+                WHERE id = $2;
+            `,
+            [reqBody.admin, id],
+        )
+    }
+
+    if (typeof reqBody.active !== 'undefined') {
+        await client.query(
+            `
+                UPDATE users
+                SET active = $1
+                WHERE id = $2;
+            `,
+            [reqBody.active, id],
+        )
+    }
     res.status(200).json(reqBody)
 }
 export default allowCors(auth(handler))
